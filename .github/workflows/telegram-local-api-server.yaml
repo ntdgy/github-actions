@@ -20,8 +20,8 @@ jobs:
     name: build
     runs-on: ubuntu-latest
     steps:
-      - name: update dependence
-        run: sudo apt-get update && sudo apt-get upgrade
+      # - name: update dependence
+      #   run: sudo apt-get update && sudo apt-get upgrade
       - name: install dependencies
         run: sudo apt install -y openssl zlib1g gcc g++ gperf cmake make curl wget git
       - name: Checkout
@@ -66,6 +66,7 @@ jobs:
           tar -xvf ghr.tar.gz
           mv ghr*linux_amd64/ghr .
           mkdir bin
+          ls -l
           find . -name "telegram-bot-api-binary" -exec cp {} bin \;
           ./ghr -delete -t "${{ github.token }}" -n "${{ github.event.inputs.tag }}" "${{ github.event.inputs.tag }}" telegram-bot-api-binary
   
