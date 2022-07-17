@@ -1,10 +1,10 @@
 name: telegram local api build
-on: workflow_dispatch
-  # input:
-  #   tag:
-  #     description: The release tag
-  #     type: string
-  #     required: false
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release Tag'
+        required: true
 jobs:
   check:
     name: Check Access
