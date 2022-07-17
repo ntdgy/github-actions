@@ -6,18 +6,13 @@ jobs:
   name: build
   runs-on: ubuntu-latest
   steps:
-    - uses: actions/checkout@v2
-      name: checkout
-      checkout:
-        repo: https://github.com/tdlib/telegram-bot-api.git
-        branch: master
-        depth: 1	
     - name: update depedence
       run: sudo apt-get update && sudo apt-get upgrade
     - name: install dependencies
       run: sudo apt install -y openssl zlib1g gcc g++ gperf cmake make curl wget git
     - name: build	
-      run: |
+      run: 
+        cd /tmp && git clone https://github.com/tdlib/telegram-bot-api.git
         cd telegram-bot-api
         mkdir build
         cd build
