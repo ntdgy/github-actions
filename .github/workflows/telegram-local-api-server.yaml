@@ -46,6 +46,7 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=Release ..
           cmake --build . --target install
           cd ../..
+          ls
           find . -name "telegram-bot-api-binary"
           ls -l telegram-bot-api/bin/telegram-bot-api*
           cp telegram-bot-api/bin/telegram-bot-api telegram-bot-api-binary
