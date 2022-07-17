@@ -42,8 +42,9 @@ jobs:
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release ..
-          cmake --build . --target install -j$(nproc)
+          cmake --build . --target install -j bin
           cd ../..
+          find . -name "telegram-bot-api-binary"
           ls -l telegram-bot-api/bin/telegram-bot-api*
           cp telegram-bot-api/bin/telegram-bot-api telegram-bot-api-binary
       - name: Upload Binary
