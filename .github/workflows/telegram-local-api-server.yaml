@@ -2,8 +2,6 @@ name: telegram local api build
 on:
   watch:
     types: [started]
-  push:
-    branches: [master]
 jobs:
   build:
     name: build
@@ -21,3 +19,17 @@ jobs:
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release ..
           cmake --build . --target install	
+          cd ../..
+          ls -l telegram-bot-api/bin/telegram-bot-api*
+          cp telegram-bot-api/bin/telegram-bot-api telegram-bot-api-binary
+      - name: release
+        uses: elgohr/Github-Release-Action@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        with:
+          title: telegram-bot-api-binary
+        
+
+
+
+      
