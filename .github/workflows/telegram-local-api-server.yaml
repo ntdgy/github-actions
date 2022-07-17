@@ -9,10 +9,10 @@ jobs:
     name: build
     runs-on: ubuntu-latest
     steps:
-      # - name: update depedence
-      #   run: sudo apt-get update && sudo apt-get upgrade
-      # - name: install dependencies
-      #   run: sudo apt install -y openssl zlib1g gcc g++ gperf cmake make curl wget git
+      - name: update depedence
+        run: sudo apt-get update && sudo apt-get upgrade
+      - name: install dependencies
+        run: sudo apt install -y openssl zlib1g gcc g++ gperf cmake make curl wget git
       - name: build	
         run: | 
           cd /tmp && git clone https://github.com/tdlib/telegram-bot-api.git
