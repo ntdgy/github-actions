@@ -50,18 +50,26 @@ jobs:
           find . -name "telegram-bot-api-binary"
           ls -l telegram-bot-api/build/telegram-bot-api*
           cp telegram-bot-api/build/telegram-bot-api telegram-bot-api-binary
-      - name: Upload Binary
-        uses: actions/upload-artifact@master
+  publish:
+    needs:
+      - build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Donwload Artifacts
+        uses: actions/download-artifact@v2
         with:
-          name: telegram-bot-api-binary
-          path: telegram-bot-api-binary
-      - name: release
-        uses: elgohr/Github-Release-Action@v4
-        env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-        with:
-          title: telegram-bot-api-binary
-        
+          path: artifacts
+      - name: Release
+        run: |
+          wget -O ghr.tar.gz https://github.com/tcnksm/ghr/releases/download/v0.13.0/ghr_v0.13.0_linux_amd64.tar.gz
+          tar -xvf ghr.tar.gz
+          mv ghr*linux_amd64/ghr .
+          mkdir bin
+          find artifacts -name "telegram-bot-api-binary" -exec cp {} bin \;
+          ./ghr -delete -t "${{ github.token }}" -n "${{ github.event.inputs.tag }}" "${{ github.event.inputs.tag }}" bin
+  
 
 
 
