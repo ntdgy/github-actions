@@ -48,8 +48,8 @@ jobs:
           cd ../..
           ls
           find . -name "telegram-bot-api-binary"
-          ls -l telegram-bot-api/bin/telegram-bot-api*
-          cp telegram-bot-api/bin/telegram-bot-api telegram-bot-api-binary
+          ls -l telegram-bot-api/build/telegram-bot-api*
+          cp telegram-bot-api/build/telegram-bot-api telegram-bot-api-binary
       - name: Upload Binary
         uses: actions/upload-artifact@master
         with:
