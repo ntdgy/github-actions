@@ -1,7 +1,5 @@
 name: telegram local api build
-on:
-  watch:
-    types: [started]
+on: workflow_dispatch
 jobs:
   build:
     name: build
