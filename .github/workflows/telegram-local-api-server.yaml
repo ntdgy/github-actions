@@ -1,5 +1,7 @@
 name: telegram local api build
-on: [star]
+on:
+  watch:
+    types: [started]
 jobs:
   - name: build
     runs-on: ubuntu-latest
