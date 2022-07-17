@@ -67,7 +67,7 @@ jobs:
           mv ghr*linux_amd64/ghr .
           mkdir bin
           find . -name "telegram-bot-api-binary" -exec cp {} bin \;
-          ./ghr -delete -t "${{ github.token }}" -n "${{ github.event.inputs.tag }}" "${{ github.event.inputs.tag }}" bin
+          ./ghr -delete -t "${{ github.token }}" -n "${{ github.event.inputs.tag }}" "${{ github.event.inputs.tag }}" telegram-bot-api-binary
   
 
 
