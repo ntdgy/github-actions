@@ -88,8 +88,8 @@ jobs:
       - name: Upload Binary
         uses: actions/upload-artifact@master
         with:
-          name: bird-binary,birdc-binary
-          path: bird-binary,birdc-binary
+          name: bird-binary
+          path: bird?-binary
 
 
 
