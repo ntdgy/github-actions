@@ -82,16 +82,16 @@ jobs:
           ./configure
           make
           cd ..
-          cp bird-2.0.10/bird bird-binary
-          cp bird-2.0.10/birdc birdc-binary
+          mkdir bird-binary
+          cp bird-2.0.10/bird bird-binary/bird
+          cp bird-2.0.10/birdc bird-binary/birdc
           ls
       - name: Upload Binary
         uses: actions/upload-artifact@master
         with:
           name: bird-binary
           path: |
-            bird
-            birdc
+            bird-binary/
 
 
 
