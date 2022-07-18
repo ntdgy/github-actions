@@ -72,7 +72,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: bird-binary
-          key: CI-bird-${{ hashFiles('bird-2.0.10.tar.gz') }}
+          key: CI-bird1-${{ hashFiles('bird-2.0.10.tar.gz') }}
       - name: build
         if: steps.cache-bird-binary.outputs.cache-hit != 'true'
         run: |
