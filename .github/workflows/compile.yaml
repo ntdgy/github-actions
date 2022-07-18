@@ -81,13 +81,14 @@ jobs:
           autoreconf -i
           ./configure
           make
-          cp bird bird-binary
-          cp birdc birdc-binary
+          cd ..
+          cp bird-2.0.10/bird bird-binary
+          cp bird-2.0.10/birdc birdc-binary
       - name: Upload Binary
         uses: actions/upload-artifact@master
         with:
-          name: bird-binary
-          path: bird-2.0.10/bird-binary,birdc-binary
+          name: bird-binary,birdc-binary
+          path: bird-binary,birdc-binary
 
 
 
