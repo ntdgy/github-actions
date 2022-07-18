@@ -16,7 +16,9 @@ jobs:
           permission: "write"
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-  telegram-bot-api-binary:
+
+
+  telegram-bot-api-binary: # complie telegram-bot-api-binary
     name: telegram-bot-api-binary
     runs-on: ubuntu-latest
     steps:
@@ -46,8 +48,6 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=Release ..
           cmake --build . --target install
           cd ../..
-          ls
-          find . -name "telegram-bot-api-binary"
           ls -l telegram-bot-api/build/telegram-bot-api*
           cp telegram-bot-api/build/telegram-bot-api telegram-bot-api-binary
       - name: Upload Binary
@@ -55,9 +55,45 @@ jobs:
         with:
           name: telegram-bot-api-binary
           path: telegram-bot-api-binary
+
+  bird: # complie bird
+    name: bird
+    runs-on: ubuntu-latest
+    steps:
+      - name: install dependencies
+        run: sudo apt install -y gcc make autoconf flex bison libncurses-dev libreadline-dev
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: clone repo
+        run: |
+              wget https://bird.network.cz/download/bird-2.0.10.tar.gz
+      - name: Cache Bird Binary
+        id: cache-bird-binary
+        uses: actions/cache@v2
+        with:
+          path: bird-binary
+          key: CI-bird-${{ hashFiles('bird-2.0.10.tar.gz') }}
+      - name: build
+        if: steps.cache-bird-binary.outputs.cache-hit != 'true'
+        run: |
+          tar -xz bird-2.0.10.tar.gz
+          cd bird-2.0.10
+          autoreconf -i
+          ./configure
+          make
+          cp bird bird-binary
+          cp birdc birdc-binary
+      - name: Upload Binary
+        uses: actions/upload-artifact@master
+        with:
+          name: bird-binary,birdc-binary
+          path: bird-binary,birdc-binary
+
+
   publish:
     needs:
       - telegram-bot-api-binary
+      - bird
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -67,6 +103,11 @@ jobs:
         with:
           name: telegram-bot-api-binary
           path: .
+      - name: Download Bird Binary
+        uses: actions/download-artifact@master
+        with:
+          name: bird-binary,birdc-binary
+          path: .
       - name: Release
         run: |
           wget -O ghr.tar.gz https://github.com/tcnksm/ghr/releases/download/v0.13.0/ghr_v0.13.0_linux_amd64.tar.gz
@@ -75,7 +116,7 @@ jobs:
           mkdir bin
           ls -l
           find . -name "telegram-bot-api-binary" -exec cp {} bin \;
-          ./ghr -delete -t "${{ github.token }}" -n "${{ github.event.inputs.tag }}" "${{ github.event.inputs.tag }}" telegram-bot-api-binary
+          ./ghr -delete -t "${{ github.token }}" -n "${{ github.event.inputs.tag }}" "${{ github.event.inputs.tag }}" telegram-bot-api-binary bird-binary birdc-binary
   
 
 
