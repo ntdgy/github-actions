@@ -76,7 +76,7 @@ jobs:
       - name: build
         if: steps.cache-bird-binary.outputs.cache-hit != 'true'
         run: |
-          tar -xz bird-2.0.10.tar.gz
+          tar -xzf bird-2.0.10.tar.gz
           cd bird-2.0.10
           autoreconf -i
           ./configure
