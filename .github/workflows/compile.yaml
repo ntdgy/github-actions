@@ -119,6 +119,11 @@ jobs:
         with:
           name: bird-binary
           path: .
+      - name: Download Birdc Binary
+        uses: actions/download-artifact@master
+        with:
+          name: birdc-binary
+          path: .
       - name: Release
         run: |
           wget -O ghr.tar.gz https://github.com/tcnksm/ghr/releases/download/v0.13.0/ghr_v0.13.0_linux_amd64.tar.gz
@@ -127,8 +132,8 @@ jobs:
           mkdir bin
           ls -l
           find . -name "telegram-bot-api-binary" -exec cp {} bin \;
-          find . -name "bird-binary" -exec cp {} bin \;
-          find . -name "birdc-binary" -exec cp {} bin \;
+          find . -name "bird" -exec cp {} bin \;
+          find . -name "birdc" -exec cp {} bin \;
           ./ghr -delete -t "${{ github.token }}" -n "${{ github.event.inputs.tag }}" "${{ github.event.inputs.tag }}" bin
   
 
