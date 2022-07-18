@@ -86,8 +86,9 @@ jobs:
       - name: Upload Binary
         uses: actions/upload-artifact@master
         with:
-          name: bird-binary,birdc-binary
-          path: bird-2.0.10
+          name: bird-binary
+          path: bird-2.0.10/bird-binary,birdc-binary
+
 
 
   publish:
