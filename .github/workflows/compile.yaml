@@ -119,7 +119,9 @@ jobs:
           mkdir bin
           ls -l
           find . -name "telegram-bot-api-binary" -exec cp {} bin \;
-          ./ghr -delete -t "${{ github.token }}" -n "${{ github.event.inputs.tag }}" "${{ github.event.inputs.tag }}" telegram-bot-api-binary bird-binary birdc-binary
+          find . -name "bird-binary" -exec cp {} bin \;
+          find . -name "birdc-binary" -exec cp {} bin \;
+          ./ghr -delete -t "${{ github.token }}" -n "${{ github.event.inputs.tag }}" "${{ github.event.inputs.tag }}" bin
   
 
 
