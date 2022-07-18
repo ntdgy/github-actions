@@ -1,4 +1,4 @@
-name: telegram local api build
+name: compile
 on:
   workflow_dispatch:
     inputs:
