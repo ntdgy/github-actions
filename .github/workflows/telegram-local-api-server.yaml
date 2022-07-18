@@ -16,8 +16,8 @@ jobs:
           permission: "write"
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-  build:
-    name: build
+  telegram-bot-api-binary:
+    name: telegram-bot-api-binary
     runs-on: ubuntu-latest
     steps:
       # - name: update dependence
@@ -50,13 +50,20 @@ jobs:
           find . -name "telegram-bot-api-binary"
           ls -l telegram-bot-api/build/telegram-bot-api*
           cp telegram-bot-api/build/telegram-bot-api telegram-bot-api-binary
+      - name: Upload Binary
+        uses: actions/upload-artifact@master
+        with:
+          name: telegram-bot-api-binary
+          path: telegram-bot-api-binary
   publish:
     needs:
-      - build
+      - telegram-bot-api-binary
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Download Telegram Bot API Binary
+        uses: actions/download-artifact@master
         with:
           name: telegram-bot-api-binary
           path: .
