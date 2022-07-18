@@ -72,9 +72,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: bird-binary
-          key: CI-bird-${{ hashFiles('bird-2.0.10.tar.gz') }}
+          key: CI-birdc-${{ hashFiles('bird-2.0.10.tar.gz') }}
       - name: build
-        #if: steps.cache-bird-binary.outputs.cache-hit != 'true'
+        if: steps.cache-bird-binary.outputs.cache-hit != 'true'
         run: |
           tar -xzf bird-2.0.10.tar.gz
           cd bird-2.0.10
@@ -109,7 +109,7 @@ jobs:
       - name: Download Bird Binary
         uses: actions/download-artifact@master
         with:
-          name: bird-binary,birdc-binary
+          name: bird-binary
           path: .
       - name: Release
         run: |
