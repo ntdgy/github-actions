@@ -74,7 +74,7 @@ jobs:
           path: bird-binary
           key: CI-bird-${{ hashFiles('bird-2.0.10.tar.gz') }}
       - name: build
-        if: steps.cache-bird-binary.outputs.cache-hit != 'true'
+        #if: steps.cache-bird-binary.outputs.cache-hit != 'true'
         run: |
           tar -xzf bird-2.0.10.tar.gz
           cd bird-2.0.10
