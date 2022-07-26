@@ -56,6 +56,44 @@ jobs:
           name: telegram-bot-api-binary
           path: telegram-bot-api-binary
 
+    telegram-bot-api-binary-clang: # complie telegram-bot-api-binary
+    name: telegram-bot-api-binary-clang
+    runs-on: ubuntu-latest
+    steps:
+      # - name: update dependence
+      #   run: sudo apt-get update && sudo apt-get upgrade
+      - name: install dependencies
+        run: sudo apt install -y openssl zlib1g gcc g++ gperf cmake make curl wget git clang-10 libc++-dev libc++abi-dev
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: clone repo
+        run: |
+              git clone --recursive https://github.com/tdlib/telegram-bot-api.git
+              git status telegram-bot-api >> telegram-bot-api-status
+      - name: Cache Bot API Binary
+        id: cache-bot-api
+        uses: actions/cache@v2
+        with:
+          path: telegram-bot-api-binary
+          key: CI-telegram-bot-api-clang-${{ hashFiles('telegram-bot-api-status') }}
+      - name: build	
+        if: steps.cache-bot-api.outputs.cache-hit != 'true'
+        run: |
+          cd telegram-bot-api
+          rm -rf build
+          mkdir build
+          cd build
+          CXXFLAGS="-stdlib=libc++" CC=/usr/bin/clang-10 CXX=/usr/bin/clang++-10 cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=.. ..
+          cmake --build . --target install
+          cd ../..
+          ls -l telegram-bot-api/bin/telegram-bot-api*
+          cp telegram-bot-api/build/telegram-bot-api telegram-bot-api-binary-clang
+      - name: Upload Binary
+        uses: actions/upload-artifact@master
+        with:
+          name: telegram-bot-api-binary-clang
+          path: telegram-bot-api-binary-clang
+
   bird: # complie bird
     name: bird
     runs-on: ubuntu-latest
@@ -99,12 +137,42 @@ jobs:
           path: |
             bird-binary/birdc
 
+  # glibc:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: install dependencies
+  #       run: sudo apt install -y gcc make autoconf flex bison libncurses-dev libreadline-dev
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #     - name: clone repo
+  #       run: |
+  #             wget http://ftp.gnu.org/gnu/glibc/glibc-2.29.tar.gz
+  #     # - name: Cache Glibc Binary
+  #     #   id: cache-glibc-binary
+  #     #   uses: actions/cache@v2
+  #     #   with:
+  #     #     path: glibc-binary
+  #     #     key: CI-glibc-${{ hashFiles('glibc-2.29.tar.gz') }}
+  #     - name: build
+  #       # if: steps.cache-glibc-binary.outputs.cache-hit != 'true'
+  #       run: |
+  #         tar -xzf glibc-2.29.tar.gz
+  #         cd glibc-2.29
+  #         mkdir build
+  #         cd build
+  #         ../configure --disable-sanity-checks
+  #         make
+  #         cd ..
+  #         mkdir glibc-binary
+  #         cp glibc-2.29/lib/libc.so.6 glibc-binary/libc.so.6
+  #         ls
 
 
   publish:
     needs:
       - telegram-bot-api-binary
       - bird
+      - telegram-bot-api-binary-clang
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -118,6 +186,11 @@ jobs:
         uses: actions/download-artifact@master
         with:
           name: bird-binary
+          path: .
+      - name: Download Telegram Bot API Binary
+        uses: actions/download-artifact@master
+        with:
+          name: telegram-bot-api-binary-clang
           path: .
       - name: Download Birdc Binary
         uses: actions/download-artifact@master
@@ -134,6 +207,7 @@ jobs:
           find . -name "telegram-bot-api-binary" -exec cp {} bin \;
           find . -name "bird" -exec cp {} bin \;
           find . -name "birdc" -exec cp {} bin \;
+          find . -name "telegram-bot-api-binary-clang" -exec cp {} bin \;
           ./ghr -delete -t "${{ github.token }}" -n "${{ github.event.inputs.tag }}" "${{ github.event.inputs.tag }}" bin
   
 
