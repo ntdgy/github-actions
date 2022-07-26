@@ -57,42 +57,42 @@ jobs:
           path: telegram-bot-api-binary
 
     telegram-bot-api-binary-clang: # complie telegram-bot-api-binary
-    name: telegram-bot-api-binary-clang
-    runs-on: ubuntu-latest
-    steps:
-      # - name: update dependence
-      #   run: sudo apt-get update && sudo apt-get upgrade
-      - name: install dependencies
-        run: sudo apt install -y openssl zlib1g gcc g++ gperf cmake make curl wget git clang-10 libc++-dev libc++abi-dev
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: clone repo
-        run: |
-              git clone --recursive https://github.com/tdlib/telegram-bot-api.git
-              git status telegram-bot-api >> telegram-bot-api-status
-      - name: Cache Bot API Binary
-        id: cache-bot-api
-        uses: actions/cache@v2
-        with:
-          path: telegram-bot-api-binary
-          key: CI-telegram-bot-api-clang-${{ hashFiles('telegram-bot-api-status') }}
-      - name: build	
-        if: steps.cache-bot-api.outputs.cache-hit != 'true'
-        run: |
-          cd telegram-bot-api
-          rm -rf build
-          mkdir build
-          cd build
-          CXXFLAGS="-stdlib=libc++" CC=/usr/bin/clang-10 CXX=/usr/bin/clang++-10 cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=.. ..
-          cmake --build . --target install
-          cd ../..
-          ls -l telegram-bot-api/bin/telegram-bot-api*
-          cp telegram-bot-api/build/telegram-bot-api telegram-bot-api-binary-clang
-      - name: Upload Binary
-        uses: actions/upload-artifact@master
-        with:
-          name: telegram-bot-api-binary-clang
-          path: telegram-bot-api-binary-clang
+      name: telegram-bot-api-binary-clang
+      runs-on: ubuntu-latest
+      steps:
+        # - name: update dependence
+        #   run: sudo apt-get update && sudo apt-get upgrade
+        - name: install dependencies
+          run: sudo apt install -y openssl zlib1g gcc g++ gperf cmake make curl wget git clang-10 libc++-dev libc++abi-dev
+        - name: Checkout
+          uses: actions/checkout@v2
+        - name: clone repo
+          run: |
+                git clone --recursive https://github.com/tdlib/telegram-bot-api.git
+                git status telegram-bot-api >> telegram-bot-api-status
+        - name: Cache Bot API Binary
+          id: cache-bot-api
+          uses: actions/cache@v2
+          with:
+            path: telegram-bot-api-binary
+            key: CI-telegram-bot-api-clang-${{ hashFiles('telegram-bot-api-status') }}
+        - name: build	
+          if: steps.cache-bot-api.outputs.cache-hit != 'true'
+          run: |
+            cd telegram-bot-api
+            rm -rf build
+            mkdir build
+            cd build
+            CXXFLAGS="-stdlib=libc++" CC=/usr/bin/clang-10 CXX=/usr/bin/clang++-10 cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=.. ..
+            cmake --build . --target install
+            cd ../..
+            ls -l telegram-bot-api/bin/telegram-bot-api*
+            cp telegram-bot-api/build/telegram-bot-api telegram-bot-api-binary-clang
+        - name: Upload Binary
+          uses: actions/upload-artifact@master
+          with:
+            name: telegram-bot-api-binary-clang
+            path: telegram-bot-api-binary-clang
 
   bird: # complie bird
     name: bird
