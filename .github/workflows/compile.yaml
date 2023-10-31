@@ -8,6 +8,9 @@ on:
       tag:
         description: 'Release Tag'
         required: false
+  push:
+    branches: [master]
+  
 jobs:
   check:
     name: Check Access
@@ -88,7 +91,7 @@ jobs:
           rm -rf build
           mkdir build
           cd build
-          CXXFLAGS="-stdlib=libc++" CC=/usr/bin/clang-10 CXX=/usr/bin/clang++-10 cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=.. ..
+          CXXFLAGS="-stdlib=libc++" CC=/usr/bin/clang CXX=/usr/bin/clang++ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=.. ..
           cmake --build . --target install
           cd ../..
           ls -l telegram-bot-api/bin/telegram-bot-api*
