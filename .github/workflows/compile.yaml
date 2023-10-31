@@ -113,25 +113,25 @@ jobs:
         uses: actions/checkout@v2
       - name: clone repo
         run: |
-              wget https://bird.network.cz/download/bird-2.0.10.tar.gz
+              wget https://bird.network.cz/download/bird-2.14.tar.gz
       - name: Cache Bird Binary
         id: cache-bird-binary
         uses: actions/cache@v2
         with:
           path: bird-binary
-          key: CI-bird2-${{ hashFiles('bird-2.0.10.tar.gz') }}
+          key: CI-bird2-${{ hashFiles('bird-2.14.tar.gz') }}
       - name: build
         if: steps.cache-bird-binary.outputs.cache-hit != 'true'
         run: |
-          tar -xzf bird-2.0.10.tar.gz
-          cd bird-2.0.10
+          tar -xzf bird-2.14.tar.gz
+          cd bird-2.14
           autoreconf -i
           ./configure
           make
           cd ..
           mkdir bird-binary
-          cp bird-2.0.10/bird bird-binary/bird
-          cp bird-2.0.10/birdc bird-binary/birdc
+          cp bird-2.14/bird bird-binary/bird
+          cp bird-2.14/birdc bird-binary/birdc
           ls
       - name: Upload Binary
         uses: actions/upload-artifact@master
