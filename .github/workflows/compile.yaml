@@ -162,7 +162,8 @@ jobs:
         if: github.event.inputs.tag == ''
         run: |
           echo "tag is empty"
-          echo "::set-env name=tag::$(date +%Y%m%d)"
+          echo "set tag to day"
+          echo "tag=$(date +%Y%m%d)" >> $GITHUB_ENV
 
       # ignore if all binary cache hit
       - name: check cache
