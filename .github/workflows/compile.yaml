@@ -195,10 +195,10 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            telegram-bot-api
+            telegram-bot-api-binary
             bird
             birdc
-            telegram-bot-api
+            telegram-bot-api-binary-clang
           # get tag from env
           tag_name: ${{ github.event.inputs.tag || env.tag }}
           draft: false
