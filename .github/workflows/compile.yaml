@@ -236,47 +236,47 @@ jobs:
   #         ls
 
 
-  publish:
-    needs:
-      - telegram-bot-api-binary
-      - bird
-      - telegram-bot-api-binary-clang
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Download Telegram Bot API Binary
-        uses: actions/download-artifact@master
-        with:
-          name: telegram-bot-api-binary
-          path: .
-      - name: Download Bird Binary
-        uses: actions/download-artifact@master
-        with:
-          name: bird-binary
-          path: .
-      - name: Download Telegram Bot API Binary
-        uses: actions/download-artifact@master
-        with:
-          name: telegram-bot-api-binary-clang
-          path: .
-      - name: Download Birdc Binary
-        uses: actions/download-artifact@master
-        with:
-          name: birdc-binary
-          path: .
-      - name: Release
-        run: |
-          wget -O ghr.tar.gz https://github.com/tcnksm/ghr/releases/download/v0.13.0/ghr_v0.13.0_linux_amd64.tar.gz
-          tar -xvf ghr.tar.gz
-          mv ghr*linux_amd64/ghr .
-          mkdir bin
-          ls -l
-          find . -name "telegram-bot-api-binary" -exec cp {} bin \;
-          find . -name "bird" -exec cp {} bin \;
-          find . -name "birdc" -exec cp {} bin \;
-          find . -name "telegram-bot-api-binary-clang" -exec cp {} bin \;
-          ./ghr -delete -t "${{ github.token }}" -n "${{ github.event.inputs.tag }}" "${{ github.event.inputs.tag }}" bin
+  # publish:
+  #   needs:
+  #     - telegram-bot-api-binary
+  #     - bird
+  #     - telegram-bot-api-binary-clang
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #     - name: Download Telegram Bot API Binary
+  #       uses: actions/download-artifact@master
+  #       with:
+  #         name: telegram-bot-api-binary
+  #         path: .
+  #     - name: Download Bird Binary
+  #       uses: actions/download-artifact@master
+  #       with:
+  #         name: bird-binary
+  #         path: .
+  #     - name: Download Telegram Bot API Binary
+  #       uses: actions/download-artifact@master
+  #       with:
+  #         name: telegram-bot-api-binary-clang
+  #         path: .
+  #     - name: Download Birdc Binary
+  #       uses: actions/download-artifact@master
+  #       with:
+  #         name: birdc-binary
+  #         path: .
+  #     - name: Release
+  #       run: |
+  #         wget -O ghr.tar.gz https://github.com/tcnksm/ghr/releases/download/v0.13.0/ghr_v0.13.0_linux_amd64.tar.gz
+  #         tar -xvf ghr.tar.gz
+  #         mv ghr*linux_amd64/ghr .
+  #         mkdir bin
+  #         ls -l
+  #         find . -name "telegram-bot-api-binary" -exec cp {} bin \;
+  #         find . -name "bird" -exec cp {} bin \;
+  #         find . -name "birdc" -exec cp {} bin \;
+  #         find . -name "telegram-bot-api-binary-clang" -exec cp {} bin \;
+  #         ./ghr -delete -t "${{ github.token }}" -n "${{ github.event.inputs.tag }}" "${{ github.event.inputs.tag }}" bin
   
 
 
