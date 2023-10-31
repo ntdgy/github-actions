@@ -82,7 +82,7 @@ jobs:
         id: cache-bot-api
         uses: actions/cache@v2
         with:
-          path: telegram-bot-api-binary
+          path: telegram-bot-api-binary-clang
           key: CI-telegram-bot-api-clang-${{ hashFiles('telegram-bot-api-status') }}
       - name: build	
         if: steps.cache-bot-api.outputs.cache-hit != 'true'
