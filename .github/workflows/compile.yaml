@@ -200,7 +200,7 @@ jobs:
             bird-binary/birdc
             telegram-bot-api-binary-clang/telegram-bot-api
           # get tag from env
-          tag: ${{ github.event.inputs.tag || env.tag }}
+          tag_name: ${{ github.event.inputs.tag || env.tag }}
           draft: false
           prerelease: false
           token: ${{ secrets.GITHUB_TOKEN }}
