@@ -155,16 +155,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: git clone quiche
+        continue-on-error: true
         run: |
               git clone --recursive https://github.com/cloudflare/quiche
               cd quiche
               git checkout 0.18.0
-              git status quiche >> curl-status
+              git status quiche >> ../curl-status
               cd ..
               git clone --recursive https://github.com/curl/curl
               cd curl
               git checkout curl-8_4_0
-              git status curl >> curl-status
+              git status curl >> ../curl-status
               cd ..
       - name: Cache curl Binary
         id: cache-curl-binary
