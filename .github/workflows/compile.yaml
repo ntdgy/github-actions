@@ -32,7 +32,7 @@ jobs:
       # - name: update dependence
       #   run: sudo apt-get update && sudo apt-get upgrade
       - name: install dependencies
-        run: sudo apt install -y openssl zlib1g gcc g++ gperf cmake make curl wget git libc6-dev
+        run: sudo apt update && sudo apt install -y openssl zlib1g gcc g++ gperf cmake make curl wget git libc6-dev
       - name: Checkout
         uses: actions/checkout@v4
       - name: clone repo
@@ -71,7 +71,7 @@ jobs:
       # - name: update dependence
       #   run: sudo apt-get update && sudo apt-get upgrade
       - name: install dependencies
-        run: sudo apt install -y openssl zlib1g gcc g++ gperf cmake make curl wget git clang libc++-dev libc++abi-dev
+        run: sudo apt update && sudo apt install -y openssl zlib1g gcc g++ gperf cmake make curl wget git clang libc++-dev libc++abi-dev
       - name: Checkout
         uses: actions/checkout@v4
       - name: clone repo
@@ -108,7 +108,7 @@ jobs:
     needs: check
     steps:
       - name: install dependencies
-        run: sudo apt install -y gcc make autoconf flex bison libncurses-dev libreadline-dev
+        run: sudo apt update && sudo apt install -y gcc make autoconf flex bison libncurses-dev libreadline-dev
       - name: Checkout
         uses: actions/checkout@v4
       - name: clone repo
@@ -145,6 +145,43 @@ jobs:
           name: birdc-binary
           path: |
             bird-binary/birdc
+
+  # compile sniproxy
+  sniproxy:
+    name: sniproxy
+    runs-on: ubuntu-latest
+    needs: check
+    steps:
+      - name: install dependencies
+        run:  sudo apt update && sudo apt install autotools-dev cdbs debhelper dh-autoreconf dpkg-dev gettext libev-dev libpcre3-dev libudns-dev pkg-config fakeroot devscripts
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: clone repo
+        run: |
+              git clone https://github.com/dlundquist/sniproxy.git
+      - name: Cache Sniproxy Binary
+        id: cache-sniproxy-binary
+        uses: actions/cache@v3.3.2
+        with:
+          path: sniproxy-binary
+          key: CI-sniproxy-${{ hashFiles('sniproxy') }}
+      - name: build
+        if: steps.cache-sniproxy-binary.outputs.cache-hit != 'true'
+        run: |
+          cd sniproxy
+          autoreconf -i
+          ./configure --enable-dns
+          make
+          cd ..
+          mkdir sniproxy-binary
+          cp sniproxy/src/sniproxy sniproxy-binary/sniproxy
+          ls
+      - name: Upload Binary
+        uses: actions/upload-artifact@master
+        with:
+          name: sniproxy-binary
+          path: sniproxy-binary/sniproxy
+  
 
   # compile curl with quic
   # curl:
@@ -246,6 +283,11 @@ jobs:
         with:
           name: birdc-binary
           path: .
+      - name: Download Sniproxy Binary
+        uses: actions/download-artifact@master
+        with:
+          name: sniproxy-binary
+          path: .
       # - name: Download Curl Binary
       #   uses: actions/download-artifact@master
       #   with:
@@ -259,6 +301,7 @@ jobs:
             bird
             birdc
             telegram-bot-api-binary-clang
+            sniproxy
           # get tag from env
           tag_name: ${{ github.event.inputs.tag || env.tag }}
           draft: false
